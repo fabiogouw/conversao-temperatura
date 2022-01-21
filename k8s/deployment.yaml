@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: fabiogouw/conversao-temperatura:v1
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata: 
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 8080
+      nodePort: 30000
+  type: NodePort
+
+# cluster criado com o comando abaixo
+# k3d cluster create --agents 1 --servers 1 -p "8081:30000@loadbalancer"
+# acessar http://localhost:8081 (e não https)
