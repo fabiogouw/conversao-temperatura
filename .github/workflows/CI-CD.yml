@@ -22,3 +22,7 @@ jobs:
         with: 
           context: ./src
           file: ./src/Dockerfile
+          push: true
+          tags: |
+            fabiogouw/conversao-temperatura:latest
+            fabiogouw/conversao-temperatura:${{ github.run_number }}
