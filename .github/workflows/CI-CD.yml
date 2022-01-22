@@ -29,6 +29,7 @@ jobs:
             fabiogouw/conversao-temperatura:v${{ github.run_number }}
 
   deploy:
+    needs: [build]
     runs-on: ubunto-latest
     steps:
       - uses: actions/checkout@v2
