@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
     steps:
@@ -25,4 +26,22 @@ jobs:
           push: true
           tags: |
             fabiogouw/conversao-temperatura:latest
-            fabiogouw/conversao-temperatura:${{ github.run_number }}
+            fabiogouw/conversao-temperatura:v${{ github.run_number }}
+
+  deploy:
+    runs-on: ubunto-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Kubernetes set context
+        uses: Azure/k8s-set-context@v2
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.K8S_CONFIG }}
+      
+      - name: Deploy to Kubernetes cluster
+        uses: Azure/k8s-deploy@v1.5
+        with:
+          images: fabiogouw/conversao-temperatura:v${{ github.run_number }}
+          manifests: |
+            ./k8s/deployment.yaml
